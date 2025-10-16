@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>럭셔리 소개 페이지</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html, body { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow: hidden; }
+    body { background: linear-gradient(120deg, #232526 0%, #1a1a1a 100%); }
+    #overlay {
+      position: absolute; z-index: 2; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(20,20,20,0.75); border-radius: 22px;
+      padding: 42px 64px; text-align: center; box-shadow: 0 4px 32px rgba(0,0,0,0.28);
+      font-family: 'Montserrat', 'Pretendard', 'Noto Sans KR', sans-serif;
+      border: 2px solid #bfa76b;
+      backdrop-filter: blur(3px);
+    }
+    #overlay h1 {
+      font-family: 'Playfair Display', serif;
+      color: #bfa76b;
+      font-size: 2.7rem;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 6px rgba(191,167,107,0.16);
+    }
+    #overlay p {
+      color: #fff;
+      font-size: 1.18rem;
+      line-height: 1.7;
+      margin: 0 0 12px 0;
+    }
+    #overlay strong {
+      color: #bfa76b;
+      font-weight: 500;
+      font-family: 'Playfair Display', serif;
+    }
+    canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <h1>Welcome to My Luxury Space</h1>
+    <p>
+      안녕하세요.<br>
+      저는 <strong>nawncm20-cloud</strong>입니다.<br>
+      정교함과 세련됨이 어우러진 웹, 깊이 있는 기술과<br>
+      우아함이 공존하는 공간을 지향합니다.<br>
+      당신의 특별한 경험을 위해 준비했습니다.
+    </p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154.0/build/three.min.js"></script>
+  <script>
+    // 3D 움직이는 골드 구체 배경
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.z = 5;
+
+    const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // 골드톤 머티리얼
+    const geometry = new THREE.SphereGeometry(1.9, 64, 64);
+    const material = new THREE.MeshPhysicalMaterial({
+      color: 0xBFA76B,
+      metalness: 1,
+      roughness: 0.17,
+      clearcoat: 0.8,
+      clearcoatRoughness: 0.12,
+      reflectivity: 1,
+      sheen: 1,
+      sheenColor: new THREE.Color(0xFFD700),
+      sheenRoughness: 0.2,
+      sheenThickness: 1,
+      transmission: 0.22,
+      ior: 1.35
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    // 빛 효과
+    const light1 = new THREE.PointLight(0xffffff, 1.2, 100); light1.position.set(6,6,6); scene.add(light1);
+    const light2 = new THREE.PointLight(0xbfa76b, 1, 100); light2.position.set(-4,-6,4); scene.add(light2);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+
+    // 움직임
+    function animate() {
+      requestAnimationFrame(animate);
+      sphere.rotation.y += 0.015;
+      sphere.rotation.x = Math.sin(Date.now() * 0.001) * 0.1;
+      sphere.position.x = Math.sin(Date.now() * 0.0013) * 0.6;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
